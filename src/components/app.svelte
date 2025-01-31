@@ -31,19 +31,12 @@
 
         const message: import("../pages/visitors.ts").Message = JSON.parse(event.data)
 
-        if ("globe" in message) {
-            connected = true
-            ownId = message.id
-            locations.clear()
-            for (const location in message.globe) {
-                locations.set(location, message.globe[location])
-            }
-        }
-        if ("add" in message) {
-            locations.set(message.add.id, message.add.location)
-        }
-        if ("remove" in message) {
-            locations.delete(message.remove.id)
+        connected = true
+        ownId = message.id
+
+        locations.clear()
+        for (const location in message.globe) {
+            locations.set(location, message.globe[location])
         }
     })
 

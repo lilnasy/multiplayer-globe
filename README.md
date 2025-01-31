@@ -11,9 +11,18 @@ Display website visitor locations in real-time using Cloudflare and Redis.
 
 Inspired by <a href="https://github.com/cloudflare/templates/tree/main/multiplayer-globe-template">Cloudflare's multiplayer-globe-template</a> and the <a href="https://github.com/nuxt-hub/multiplayer-globe">NuxtHub implementation</a>.
 
-## Lightweight
+## Features
+🪶**Lightweight**: production build ships just 16.7kb of JS, including the WebGL renderer, svelte runtime, and realtime communication.
 
-Production build ships just 16.7kb of JS, including the WebGL renderer, svelte runtime, and realtime communication.
+## How it works
+A `/visitors` websocket endpoint is created in the [src/pages/visitors.ts](./src/pages/visitors.ts) file.
+The endpoint uses `locals.upgradeWebSocket()` provided by the `astro-cloudflare-websocket` adapter.
+
+When the [app.svelte](./src/components/app.svelte) component is loaded on the browser, it connects to the `/visitors` websocket endpoint.
+The endpoint uses the visitor location provided by Cloudflare and aggregates it in a ValKey (open source Redis) server.
+
+Everytime a location is added or removed, the ValKey server broadcasts an event to all connected workers, acting as the single point of coordination.
+Each worker then forwards the locations of currently connected visitors to its connected browser over the websocket connection.
 
 ## Setup
 Make sure to install the dependencies with [pnpm](https://pnpm.io/installation#using-corepack):
@@ -24,7 +33,7 @@ Start a valkey server with the following command:
 ```bash
 docker run --rm -p 6379:6379 valkey/valkey:8.0.2-alpine3.21
 ```
-If the valkey server is not running on the same device as the development server, you can provide the options as the following environment variables:
+If the valkey server is not running on the same device as the development server, you can provide the options as the following variables in `.dev.vars` (see [Local Development with Secrets | Cloudflare Docs](https://developers.cloudflare.com/workers/configuration/secrets/#local-development-with-secrets)):
 ```bash
 VALKEY_HOST=db.local
 VALKEY_PORT=6379
@@ -32,8 +41,7 @@ VALKEY_USERNAME=multiplayer-app
 VALKEY_PASSWORD=multiplayer_password
 VALKEY_DB=0
 ```
-These variables are read during the build process which injects them into the server bundle.
-Providing them during runtime is not necessary, and will have no effect on the application.
+See [Secrets on deployed Workers | Cloudflare Docs](https://developers.cloudflare.com/workers/configuration/secrets/#secrets-on-deployed-workers) for information on setting up secrets for the production environment.
 
 ## Development Server
 Start the development server on `http://localhost:4321`:
