@@ -2,9 +2,9 @@
     "$schema": "node_modules/wrangler/config-schema.json",
     "name": "multiplayer-globe",
     "compatibility_flags": [
-        "nodejs_compat_v2"
+        "nodejs_compat"
     ],
-    "compatibility_date": "2025-01-28",
+    "compatibility_date": "2025-08-02",
     "pages_build_output_dir": "dist",
     "observability": {
         "enabled": true

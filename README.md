@@ -33,13 +33,11 @@ Start a valkey server with the following command:
 ```bash
 docker run --rm -p 6379:6379 valkey/valkey:8.0.2-alpine3.21
 ```
-If the valkey server is not running on the same device as the development server, you can provide the options as the following variables in `.dev.vars` (see [Local Development with Secrets | Cloudflare Docs](https://developers.cloudflare.com/workers/configuration/secrets/#local-development-with-secrets)):
+If the valkey server is not running on the same device as the development server, you can provide the connection URL as an environment variable in `.dev.vars` (see [Local Development with Secrets | Cloudflare Docs](https://developers.cloudflare.com/workers/configuration/secrets/#local-development-with-secrets)):
 ```bash
-VALKEY_HOST=db.local
-VALKEY_PORT=6379
-VALKEY_USERNAME=multiplayer-app
-VALKEY_PASSWORD=multiplayer_password
-VALKEY_DB=0
+VALKEY_URL=redis://username:password@db.local:6379/0
+# or alternatively for Redis
+REDIS_URL=redis://username:password@db.local:6379/0
 ```
 See [Secrets on deployed Workers | Cloudflare Docs](https://developers.cloudflare.com/workers/configuration/secrets/#secrets-on-deployed-workers) for information on setting up secrets for the production environment.
 
